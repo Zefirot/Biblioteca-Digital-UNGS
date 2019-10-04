@@ -1,0 +1,30 @@
+-libros(String ibns, String nombre, String categoria, int ancho)
+
+-Estanteria{
+
+	String rotulo
+	int tamaño
+	int cantidaddelibros
+	boolean vacio
+	ArrayList<Libros> libros; //guardo los libros
+	
+	void agregar(libro);
+	void quitar(libro);
+	boolean vacio();
+	void re-rotular(String rotulo); //va a cambiar el rotulo
+
+-Principal{
+	ArrayList<Estanteria> todasLasEstanterias; //todas las estanterias 
+	Diccionario<ISBN, Cantidad> cantidadDeEjemplares;
+	Diccionario<ISBN, Nombre> nombresDeLibros;
+	
+	
+	void ingresarLibro(ISBN, Categoria, Titulo, Estanteria) //busca una estanteria rotulada con su cat, si no hay da error
+	void rotular(Cat, Estanteria) //Si la estanteria esta vacia le asigna una rotulacion
+	void quitar(String ISBN) //va a quitar un libro con ese isbn
+	String librosDeUnaCat(Categoria) //devuelve un string con todos los libros y cat de ejemplares 
+	int espacioLibre(Estanteria)//devuelve si el espacio restante
+
+	void reAgruparEstanterias();
+	
+}
