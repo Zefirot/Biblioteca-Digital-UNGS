@@ -1,17 +1,16 @@
--libros(String ibns, String nombre, String categoria, int ancho)
+-libros(String ibns, String categoria, String nombre, int ancho)
 
 -Estanteria{
 
-	String rotulo
-	int tamaño
-	int cantidaddelibros
-	boolean vacio
-	ArrayList<Libros> libros; //guardo los libros
+	String rotulo //la categoria
+	int tamaño //su tamaño
+	int cantidaddelibros //la cantidad de libros
+	ArrayList<Libros> librosEnEstanteria//guardo los libros
 	
 	void agregar(libro);
 	void quitar(libro);
-	boolean vacio();
-	void re-rotular(String rotulo); //va a cambiar el rotulo
+	boolean estaVacia();
+	void rotular(String rotulo); //va a cambiar el rotulo
 
 -Principal{
 	ArrayList<Estanteria> todasLasEstanterias; //todas las estanterias 
