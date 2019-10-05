@@ -1,6 +1,7 @@
 package biblioteca;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Prueba {
 
@@ -8,16 +9,24 @@ public class Prueba {
 		BDUNGS bd = new BDUNGS(4, 10);
 		bd.rotularEstante("Computacion", 1);
 		bd.rotularEstante("Matematica", 2);
-		bd.ingresarLibro("9789684443457", "Computacion", "Estructuras de datos", 5);
-		bd.ingresarLibro("9789684443457", "Computacion", "Estructuras de datos", 5);
+		bd.rotularEstante("Computacion", 3);
+		bd.rotularEstante("Matematica", 4);
+		bd.ingresarLibro("9789684443457", "Computacion", "Estructuras de datos", 3);
 		bd.ingresarLibro("9788415552222", "Computacion", "Estructuras de datos en Java", 7);
-		bd.ingresarLibro("9389557783457", "Matematica", "Analisis de Funciones", 4);
-		//bd.eliminarLibro("9389557783457");
-		//System.out.println(bd);
+		bd.ingresarLibro("9789684443457", "Computacion", "Estructuras de datos", 5);
 		
-		System.out.println(bd.librosDeUnaCat("Computacion"));
+		bd.ingresarLibro("9389557783457", "Matematica", "Analisis de Funciones", 4);
+		bd.ingresarLibro("5421321846213", "Matematica", "Funciones Trigonometricas Inversas", 6);
+		bd.ingresarLibro("5156465314456", "Matematica", "Las layes de Don Pedro", 10);
+		
+		bd.reAgruparEstanterias();
+		
+		System.out.println(bd);
+		
  
-
+		
+		
+		
 		//bd.eliminarLibro("9389557783457");
 		//bd.rotularEstante("An�lisis Matem�tico", 2);
 		//System.out.println(bd);

@@ -6,13 +6,14 @@ public class Estanteria {
 	
 	private String rotulo;
 	private int tamanio;
+	private int copiaTamanio;
 	private int cantidaddelibros;
 	private ArrayList<Libro> librosEnEstanteria; //guardo los libros
-	//private Diccionario<String,Integer> cantidadDeLibros;
 	
-	Estanteria(int tamanio){
+	public Estanteria(int tamanio){
 		if(tamanio>0) {
 			this.tamanio= tamanio;
+			this.copiaTamanio = tamanio;
 		}
 		else {
 			throw new RuntimeException("El tama�o de la estanteria tiene que ser >0");	
@@ -70,6 +71,20 @@ public class Estanteria {
 		}
 		return false;
 	}
+	
+	//IMPORTANTE 3. Esta funcion debe de ser borrada y sustituida por "vaciarEstanteria".
+	public ArrayList<Libro> obtenerLibros(){
+		ArrayList<Libro> asd = new ArrayList<Libro>();
+		ArrayList<Libro> copiaDeLibros = new ArrayList<Libro>();  //Creo una copia de los libros
+		for(Libro elem : librosEnEstanteria) {
+			copiaDeLibros.add(elem);  //Copio todos los libros que esten en la estanteria
+		}
+		this.librosEnEstanteria=asd;  //Borro todos los libros
+		tamanio=copiaTamanio;  //Reseteo el tamano de la estanteria
+		return copiaDeLibros;
+	}
+	
+	
 	int espacioDisponible() {
 		return this.tamanio;
 	}
