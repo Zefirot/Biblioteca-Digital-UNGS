@@ -26,6 +26,7 @@ public class Diccionario<Clave, Significado> {
 		}
 	}
 	public Significado obtener(Clave n) {
+		//System.out.println(claves.size());
 		for(Tupla<Clave,Significado> elem: datos) {
 			if(elem.getVar1().equals(n)) {
 				return elem.getVar2();
@@ -40,6 +41,20 @@ public class Diccionario<Clave, Significado> {
 			}
 		}
 		return s;
+	}
+	
+	public void quitar(Clave elemento) {
+		if (!pertenece(elemento)) {
+			throw new RuntimeException("El elemento ingresado no puede ser quitado porque no esta registrado");
+		}
+		
+		for(Tupla<Clave,Significado> elem : datos) {
+			if(elem.getVar1().equals(elemento)) {
+				datos.remove(elem);
+				claves.remove(elem.getVar1());
+				return;
+			}
+		}
 	}
 	
 	public boolean pertenece(Clave n) {

@@ -72,8 +72,15 @@ public class Estanteria {
 		return false;
 	}
 	
+	
+	public void vaciarEstanteria() {  //Se resetea la estanteria.
+		ArrayList<Libro> quitarLibros = new ArrayList<Libro>();
+		this.tamanio=copiaTamanio;
+		this.librosEnEstanteria=quitarLibros;
+	}
+	
 	//IMPORTANTE 3. Esta funcion debe de ser borrada y sustituida por "vaciarEstanteria".
-	public ArrayList<Libro> obtenerLibros(){
+	/*public ArrayList<Libro> obtenerLibros(){
 		ArrayList<Libro> asd = new ArrayList<Libro>();
 		ArrayList<Libro> copiaDeLibros = new ArrayList<Libro>();  //Creo una copia de los libros
 		for(Libro elem : librosEnEstanteria) {
@@ -82,7 +89,7 @@ public class Estanteria {
 		this.librosEnEstanteria=asd;  //Borro todos los libros
 		tamanio=copiaTamanio;  //Reseteo el tamano de la estanteria
 		return copiaDeLibros;
-	}
+	}*/
 	
 	
 	int espacioDisponible() {
