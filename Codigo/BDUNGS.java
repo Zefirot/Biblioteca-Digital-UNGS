@@ -2,6 +2,7 @@ package biblioteca;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class BDUNGS {
 	private ArrayList<Estanteria> todasLasEstanterias; //todas las estanterias 
@@ -51,7 +52,7 @@ public class BDUNGS {
 
 		}else {
 			Libro libroingresado = obtenerLibro(isbn);
-			//System.out.println(libroingresado);
+			
 			//Si el libro existe entonces lo "agrego de nuevo" y despues cambio el significado. El cual seria la cantidad de apariciones.
 			catDeEjemplares.agregar(libroingresado, catDeEjemplares.obtener(libroingresado)+1);
 			
@@ -77,7 +78,7 @@ public class BDUNGS {
 			buscarLibroYEliminarlo(libro);
 		}
 		else {
-			throw new RuntimeException("No podes quitar un libro que no existe");
+			throw new RuntimeException("El isbn no corresponde a ningun libro ingresado en la biblioteca. Por ende, no puede ser eliminado");
 		}
 		
 	}
@@ -88,11 +89,11 @@ public class BDUNGS {
 				return elem;
 			}
 		}
-		throw new RuntimeException("No se encontro el libro");
+		throw new RuntimeException("No se encontro el libro solicitado");
 	}
 	
 	
-	public int reacomodarCategoria(String categoria) {  //CAMBIAR. LA CONCHA DE SU MADRE
+	public int reacomodarCategoria(String categoria) { 
 		ArrayList<Libro> cajaDeLibros = quickSortMayorAMenor(obtenerLibrosDeCategoria(categoria));  //Obtengo el Orden de Mayor a Menor. O(n2)
 		int estantesLiberados=0;
 		vaciarEstanterias(categoria);  //Vacia las estanterias O(n);
@@ -139,7 +140,7 @@ public class BDUNGS {
 		}
 	}
 	
-	public static ArrayList<Libro> quickSortMayorAMenor(ArrayList<Libro> libros){
+	private ArrayList<Libro> quickSortMayorAMenor(ArrayList<Libro> libros){
 
 		if (libros.isEmpty()) { 
 			return libros; // Caso base de la recursividad
@@ -178,7 +179,7 @@ public class BDUNGS {
 			throw new RuntimeException("No existe la categoria ingresada");
 		}
 		
-		HashMap<String,Integer> diccDeCategoria = new HashMap<String,Integer>(); //Se crea un nuevo HashMap para que el JUni verga lo acepte :c
+		HashMap<String,Integer> diccDeCategoria = new HashMap<String,Integer>(); //Se crea un nuevo HashMap para que el JUni lo acepte.
 		for(Libro elem : catDeEjemplares.keySet()) {
 			if(elem.getCategoria().equals(categoria)) {
 				diccDeCategoria.put(elem.getIsbn(), catDeEjemplares.obtener(elem));  //Registro el nombre y la cantidad de veces que aparecen
@@ -198,8 +199,8 @@ public class BDUNGS {
 	}
 	
 	public int espacioLibre(int estanteria) {
-		if(!estaRotulada(estanteria)) {
-			throw new RuntimeException("La estanteria ingresada no esta rotulada");
+		if(estanteria>todasLasEstanterias.size() || !estaRotulada(estanteria)) {
+			throw new RuntimeException("El numero de estanteria ingresado no es valido");
 		}
 		int pos=estanteria-1;
 		return todasLasEstanterias.get(pos).espacioDisponible();  //Paso la posicion al array y despues devuelvo el espacio libre de la estanteria
@@ -224,7 +225,6 @@ public class BDUNGS {
 		encuenta una estanteria no hace nada*/
 		for(Estanteria elem: this.todasLasEstanterias) {//se puede hacer en otra funcion
 			if(elem.rotulado().equals(libro.getCategoria()) && elem.espacioDisponible()>=libro.getAncho()) {//si tienen la misma cat y hay espacio disponible
-				//System.out.println("Entro");
 				elem.agregar(libro);
 				return;
 			}
@@ -239,7 +239,7 @@ public class BDUNGS {
 				elem.quitar(libro);//quito el libro de la estanteria
 				
 				catDeEjemplares.quitar(libro);
-				todosLosLibros.remove(libro);  //EXPERIMENTAL.
+				todosLosLibros.remove(libro); 
 				
 				return;//termina la funcion
 				//cuando tenga cat de ejemplares, hay que verificar la cat para ver si lo eliminamos del conj o no
@@ -251,10 +251,11 @@ public class BDUNGS {
 	public String toString() {//hacer piola, ahora solo imprimo solo las estanterias
 		StringBuilder cadena= new StringBuilder("Biblioteca Ungs: "+"\n");
 		Integer cont= 1; //para saber que estanteria
-		for(Estanteria elem: this.todasLasEstanterias) {
+		
+		for(Estanteria elem: todasLasEstanterias) {
 			cadena.append("*Estanteria nro" + cont.toString() + " : " + elem.toString() +"\n");
 			cont++;
-			}
+		}
 		return cadena.toString();
 	}
 	

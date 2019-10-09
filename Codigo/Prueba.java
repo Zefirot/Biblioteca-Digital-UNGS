@@ -22,7 +22,7 @@ public class Prueba {
 		
 		
 		bd.ingresarLibro("9789684443457", "Computacion", "Estructuras de datos", 4);
-		System.out.println(bd.reacomodarCategoria("Computacion"));
+		bd.reacomodarCategoria("Computacion");
 		
 		
 		System.out.println(bd.toString());
