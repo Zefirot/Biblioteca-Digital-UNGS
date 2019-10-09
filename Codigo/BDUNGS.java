@@ -90,19 +90,10 @@ public class BDUNGS {
 		}
 		throw new RuntimeException("No se encontro el libro");
 	}
-	//-------------Completo-----------
-	
-	
-	//String librosDeUnaCat(Categoria) //devuelve un string con todos los libros y cat de ejemplares. COMPLETADO
-	//int espacioLibre(Estanteria)//devuelve si el espacio restante 
-
-	//void reAgruparEstanterias();
-	
-	//--------------------
 	
 	
 	public int reacomodarCategoria(String categoria) {  //CAMBIAR. LA CONCHA DE SU MADRE
-		ArrayList<Libro> cajaDeLibros = ordenarDeMayorAMenor(obtenerLibrosDeCategoria(categoria));  //Obtengo el Orden de Mayor a Menor. O(n2)
+		ArrayList<Libro> cajaDeLibros = quickSortMayorAMenor(obtenerLibrosDeCategoria(categoria));  //Obtengo el Orden de Mayor a Menor. O(n2)
 		int estantesLiberados=0;
 		vaciarEstanterias(categoria);  //Vacia las estanterias O(n);
 		
@@ -148,32 +139,38 @@ public class BDUNGS {
 		}
 	}
 	
-	//IMPORTANTE 2. El sistema de Ordenamiento puede ser mejorado con quicksort o margesort.
-	private ArrayList<Libro> ordenarDeMayorAMenor(ArrayList<Libro> libros){
-		ArrayList<Libro> librosDesordenados = (ArrayList<Libro>) libros.clone();
-		ArrayList<Libro> librosOrdenados = new ArrayList<Libro>();
-		for(int i=librosDesordenados.size(); i>0; i--) {  //Se itera la lista para obtener todos los mayores en orden
-			Libro mayor = obtenerMayor(librosDesordenados);
-			librosDesordenados.remove(mayor);
-			librosOrdenados.add(mayor);  //Se agrega a la lista de ordenados y se quita de la lista que se le pase
+	public static ArrayList<Libro> quickSortMayorAMenor(ArrayList<Libro> libros){
+
+		if (libros.isEmpty()) { 
+			return libros; // Caso base de la recursividad
 		}
-		
-		return librosOrdenados;
-		
-	}
-	
-	private Libro obtenerMayor(ArrayList<Libro> lista) {  //Se busca el mayor de toda la lista que recibe
-		Libro menor=null;
-		int tamanio = 0;
-		for(Libro elem : lista) {
-			if (elem.getAncho()>=tamanio) {
-				menor=elem;
-				tamanio=elem.getAncho();
+
+		ArrayList<Libro> ordenado;  // Este ArrayList solo se crea para devolver el array ordenado al final
+		ArrayList<Libro> mayor = new ArrayList<Libro>(); // ArrayList de los libros con mayor ancho
+		ArrayList<Libro> menor = new ArrayList<Libro>(); // ArrayList de los libros con menor ancho
+		Libro libroDeComparacion = libros.get(0);  // El primer libro de la lista va a ser usado como ejemplo de comparacion
+		Libro libroNuevo=null;     // Se utiliza este libro para comparar y agregarlo a las listas
+
+		for (int i=1;i<libros.size();i++){
+			libroNuevo=libros.get(i);
+			if (libroNuevo.getAncho()>libroDeComparacion.getAncho()) {  // Se compara el ancho de los 2 libros y se determina a que lista va a ir
+				mayor.add(libroNuevo);
+			}
+			else {
+				menor.add(libroNuevo);
 			}
 		}
-		return menor;
-		
+		mayor=quickSortMayorAMenor(mayor);  // Estas 2 lineas hacen el llamado recursivo
+		menor=quickSortMayorAMenor(menor);  // Para que las ArrayList se vuelvan a ordenar y asi hasta que termine el ordenamiento
+
+		mayor.add(libroDeComparacion);          // Agrego el libro que use de ejemplo a la pila de libros con mayor ancho
+		mayor.addAll(menor);     // Uno las 2 listas y asi me queda una lista completa ordenada
+		ordenado = mayor;           //Esta asignacion solo se hace para no tener que devolver la lista "Menor" y que queda mas claro.
+
+		return ordenado;
 	}
+	
+	
 	
 	public HashMap<String,Integer> verLibrosCategoria(String categoria){
 		

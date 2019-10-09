@@ -70,7 +70,7 @@ public class Libro {
 	}*/
 	@Override
 	public String toString() {
-		String cadena= "ISBN: " + this.isbn + ", Categoria: " + this.categoria + ", Nombre: " + this.nombre;
+		String cadena= "ISBN: " + this.isbn + ", Categoria: " + this.categoria + ", Nombre: " + this.nombre+", Ancho "+this.ancho+" ";
 		return cadena;
 	}
 	
