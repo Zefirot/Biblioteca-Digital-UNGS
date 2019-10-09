@@ -133,11 +133,22 @@ public class BDUNGS {
 	}
 	
 	private void vaciarEstanterias(String categoria) {
-		for(Estanteria elem : todasLasEstanterias) {
+
+		Iterator iterator = todasLasEstanterias.iterator();
+
+		while(iterator.hasNext()){
+			Estanteria elem = (Estanteria)iterator.next();
+			if(elem.rotulado().equals(categoria)){
+				elem.vaciarEstanteria();
+			}
+
+		}
+
+		/*for(Estanteria elem : todasLasEstanterias) {
 			if(elem.rotulado().equals(categoria)) {
 				elem.vaciarEstanteria();
 			}
-		}
+		}*/
 	}
 	
 	private ArrayList<Libro> quickSortMayorAMenor(ArrayList<Libro> libros){
