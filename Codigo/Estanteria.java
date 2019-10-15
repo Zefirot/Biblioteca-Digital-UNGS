@@ -101,6 +101,9 @@ public class Estanteria {
 	String rotulado() {
 		return this.rotulo;
 	}
+	ArrayList<Libro> getLibros(){
+		return this.librosEnEstanteria;
+	}
 	
 	@Override
 	public String toString() {
