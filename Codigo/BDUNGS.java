@@ -6,11 +6,11 @@ import java.util.Iterator;
 
 public class BDUNGS {
 	private ArrayList<Estanteria> todasLasEstanterias; //todas las estanterias 
-	private Conjunto<String> cojuntoISBN;//va a servir para contar rapido
+	private Conjunto<String> conjuntoISBN;//va a servir para contar rapido
 	//private Diccionario<String, Libro> todosLosLibros; //clave isbn, significado libro
 	private Diccionario<Libro, Integer> catDeEjemplares;  //Contiene la cantidad de ejemplares
-	private ArrayList<Libro> todosLosLibros;  //Se guardan todos los libros de todas las estanterias en este array
-	
+	//private ArrayList<Libro> todosLosLibros;  //Se guardan todos los libros de todas las estanterias en este array
+	private Conjunto<Libro> conjuntoLibros;
 	private int copiaDeTamanioEstanterias;
 	
 	
@@ -22,10 +22,10 @@ public class BDUNGS {
 
 		this.todasLasEstanterias= new ArrayList<Estanteria>();
 
-		this.cojuntoISBN= new Conjunto<String>();
+		this.conjuntoISBN= new Conjunto<String>();
 
-		todosLosLibros= new ArrayList<Libro>();
-		
+		//todosLosLibros= new ArrayList<Libro>();
+		this.conjuntoLibros= new Conjunto<Libro>();
 		this.copiaDeTamanioEstanterias=tamaniodeEstanterias;
 		
 		this.catDeEjemplares = new Diccionario<Libro,Integer>();
@@ -42,11 +42,12 @@ public class BDUNGS {
 		if(!existeElLibro(isbn)) {//si no existe el libro 
 			Libro libroingresado = new Libro(isbn,categoria,titulo,ancho);
 			
-			this.cojuntoISBN.insertar(isbn);//lo agrego al conjuntodeisbn
+			this.conjuntoISBN.insertar(isbn);//lo agrego al conjuntodeisbn
 			
 			this.catDeEjemplares.agregar(libroingresado, 1);
 			
-			todosLosLibros.add(libroingresado); //Agrego el libro nuevo a todos los libros
+			this.conjuntoLibros.insertar(libroingresado); //Agrego el libro nuevo al conjunto
+			//todosLosLibros.add(libroingresado); //Agrego el libro nuevo a todos los libros
 			
 			colocarLibroEnUnaEstanteriaDisponible(libroingresado);
 
@@ -56,7 +57,7 @@ public class BDUNGS {
 			//Si el libro existe entonces lo "agrego de nuevo" y despues cambio el significado. El cual seria la cantidad de apariciones.
 			catDeEjemplares.agregar(libroingresado, catDeEjemplares.obtener(libroingresado)+1);
 			
-			todosLosLibros.add(libroingresado); //Agrego el libro.
+			//todosLosLibros.add(libroingresado); //Agrego el libro.
 
 			colocarLibroEnUnaEstanteriaDisponible(libroingresado); 
 		}
@@ -84,11 +85,17 @@ public class BDUNGS {
 	}
 	
 	private Libro obtenerLibro(String isbn) {
-		for(Libro elem : todosLosLibros) {
+		for(Libro elem : this.conjuntoLibros.getConjunto()) { //recorre el conjunto de libros 
 			if(elem.getIsbn().equals(isbn)) {
 				return elem;
 			}
 		}
+		
+		/*for(Libro elem : todosLosLibros) {
+			if(elem.getIsbn().equals(isbn)) {
+				return elem;
+			}
+		}*/
 		throw new RuntimeException("No se encontro el libro solicitado");
 	}
 	
@@ -121,13 +128,21 @@ public class BDUNGS {
 	
 	private ArrayList<Libro> obtenerLibrosDeCategoria(String categoria){
 		ArrayList<Libro> libros = new ArrayList<Libro>();
+		for(Estanteria elem: this.todasLasEstanterias) { 
+			if(categoria.equals(elem.rotulado())) {//agarra una estanteria, si el rotulado de la estanteria es igual
+				libros.addAll(elem.getLibros());//agrego todos los libros a la nueva lista
+				
+			}
+		}
 		
+		
+		/*
 		for(Libro elem : todosLosLibros) {
 			if(elem.getCategoria().equals(categoria)) {
 				libros.add(elem);
 			}
-		}
-		return libros;
+		}*/
+		return libros;//retorno la lista
 		
 		
 	}
@@ -228,7 +243,7 @@ public class BDUNGS {
 	}
 
 	private boolean existeElLibro(String isbn) {
-		return  this.cojuntoISBN.pertenece(isbn); //retorna si el isbn pertenece al conjunto
+		return  this.conjuntoISBN.pertenece(isbn); //retorna si el isbn pertenece al conjunto
 	}
 	
 	private void colocarLibroEnUnaEstanteriaDisponible(Libro libro) { 
@@ -246,16 +261,21 @@ public class BDUNGS {
 	}
 	private void buscarLibroYEliminarlo(Libro libro) {//le pasas un libro y lo elimina 
 		for(Estanteria elem: this.todasLasEstanterias) {//tiene que recorrer todas las estanterias
-			if(elem.pertenece(libro)) {//si el libro aparece en una
+			while(elem.pertenece(libro)) {//mientras el libro esta en la estanteria
+				elem.quitar(libro);//lo quito de la estanteria
+			}
+			/*if(elem.pertenece(libro)) {//si el libro aparece en una
 				elem.quitar(libro);//quito el libro de la estanteria
 				
-				catDeEjemplares.quitar(libro);
-				todosLosLibros.remove(libro); 
+				//catDeEjemplares.quitar(libro);
+				//todosLosLibros.remove(libro); 
+				//this.cojuntoISBN.eliminar(libro.getIsbn());//lo elimino del conjunto de ISBN
 				
-				return;//termina la funcion
-				//cuando tenga cat de ejemplares, hay que verificar la cat para ver si lo eliminamos del conj o no
-			}
+			}*/
 		}
+		this.catDeEjemplares.quitar(libro);
+		this.conjuntoISBN.eliminar(libro.getIsbn());//lo elimino del conjunto de ISBN
+		this.conjuntoLibros.eliminar(libro);
 	}
 	
 	@Override

@@ -88,4 +88,7 @@ public class Conjunto<T> {
 			}
 		}
 	}
+	ArrayList<T> getConjunto(){
+		return this.conj;
+	}
 }
