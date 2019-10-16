@@ -5,11 +5,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class BDUNGS {
-	private ArrayList<Estanteria> todasLasEstanterias; //todas las estanterias 
-	private Conjunto<String> conjuntoISBN;//va a servir para contar rapido
-	//private Diccionario<String, Libro> todosLosLibros; //clave isbn, significado libro
+	private ArrayList<Estanteria> todasLasEstanterias; //Todas las estanterias 
+	private Conjunto<String> conjuntoISBN;//Sirve para contar rapido los libros y saber si existen dentro de la biblioteca
 	private Diccionario<Libro, Integer> catDeEjemplares;  //Contiene la cantidad de ejemplares
-	//private ArrayList<Libro> todosLosLibros;  //Se guardan todos los libros de todas las estanterias en este array
 	private Conjunto<Libro> conjuntoLibros;
 	private int copiaDeTamanioEstanterias;
 	
@@ -18,20 +16,21 @@ public class BDUNGS {
 		if(catEstanterias<=0) {
 			throw new RuntimeException("La cantidad de estanteria tiene que ser mayor a 0");
 		}
-		//no es necesario controlar tamaniodeEstanterias, si no se cumple el irep de estanteria se lanza una excepcion
+		//No es necesario controlar tamaniodeEstanterias, si no se cumple el irep de estanteria se lanza una excepcion
 
 		this.todasLasEstanterias= new ArrayList<Estanteria>();
 
 		this.conjuntoISBN= new Conjunto<String>();
 
-		//todosLosLibros= new ArrayList<Libro>();
 		this.conjuntoLibros= new Conjunto<Libro>();
 		this.copiaDeTamanioEstanterias=tamaniodeEstanterias;
 		
 		this.catDeEjemplares = new Diccionario<Libro,Integer>();
-		for(int i=0; i<catEstanterias;i++) {//agrego todas las estanterias a la lista
-			Estanteria nueva= new Estanteria(tamaniodeEstanterias);//crea una estanteria nueva
-			this.todasLasEstanterias.add(nueva);//la agrega
+		
+		//Se crean todas las estanterias cuando se llama al constructor
+		for(int i=0; i<catEstanterias;i++) {
+			Estanteria nueva= new Estanteria(tamaniodeEstanterias);
+			this.todasLasEstanterias.add(nueva);
 		}
 			
 			
@@ -39,15 +38,15 @@ public class BDUNGS {
 	
 	public void ingresarLibro(String isbn, String categoria, String titulo,  int ancho) {
 
-		if(!existeElLibro(isbn)) {//si no existe el libro 
+		if(!existeElLibro(isbn)) {//Si no existe el libro 
 			Libro libroingresado = new Libro(isbn,categoria,titulo,ancho);
 			
-			this.conjuntoISBN.insertar(isbn);//lo agrego al conjuntodeisbn
+			this.conjuntoISBN.insertar(isbn);//Lo se agrega al conjuntoISBN
 			
-			this.catDeEjemplares.agregar(libroingresado, 1);
+			this.catDeEjemplares.agregar(libroingresado, 1);  //Se agrega el libro nuevo a la cantidad de ejemplares
 			
-			this.conjuntoLibros.insertar(libroingresado); //Agrego el libro nuevo al conjunto
-			//todosLosLibros.add(libroingresado); //Agrego el libro nuevo a todos los libros
+			this.conjuntoLibros.insertar(libroingresado); //Se agrega el libro nuevo al conjunto
+
 			
 			colocarLibroEnUnaEstanteriaDisponible(libroingresado);
 
@@ -56,26 +55,26 @@ public class BDUNGS {
 			
 			//Si el libro existe entonces lo "agrego de nuevo" y despues cambio el significado. El cual seria la cantidad de apariciones.
 			catDeEjemplares.agregar(libroingresado, catDeEjemplares.obtener(libroingresado)+1);
-			
-			//todosLosLibros.add(libroingresado); //Agrego el libro.
 
 			colocarLibroEnUnaEstanteriaDisponible(libroingresado); 
 		}
 	
 	}
+	
 	public void rotularEstante(String categoria, int numEstanteria) { //Si la estanteria esta vacia le asigna una rotulacion
 		if(numEstanteria<=0 || numEstanteria>this.todasLasEstanterias.size()) {
 			throw new RuntimeException("No existe una estanteria con ese numero");
 		}
-		int pos=  numEstanteria - 1;//porque se maneja arraylist
-		this.todasLasEstanterias.get(pos).rotular(categoria); //rotula la estanteria
+		int pos=  numEstanteria - 1;// Se cambia el valor para simular que la cantidad de estanterias empieza desde 1
+		
+		this.todasLasEstanterias.get(pos).rotular(categoria); //Se rotula la estanteria
 		
 	}
 	
 	public void eliminarLibro(String isbn) {
 		if(existeElLibro(isbn)) {
-			Libro libro= obtenerLibro(isbn);  //O(n) el anterior tambien era O(n)
-			//BuscarElLibro en CADA UNA de las Estanterias y eliminarlo
+			Libro libro= obtenerLibro(isbn);
+			//Se busca el libro en CADA UNA de las Estanterias y se elimina
 			buscarLibroYEliminarlo(libro);
 		}
 		else {
@@ -85,37 +84,35 @@ public class BDUNGS {
 	}
 	
 	private Libro obtenerLibro(String isbn) {
-		for(Libro elem : this.conjuntoLibros.getConjunto()) { //recorre el conjunto de libros 
+		//Se recorre todas las Estanterias y se busca el libro
+		for(Libro elem : this.conjuntoLibros.getConjunto()) {
 			if(elem.getIsbn().equals(isbn)) {
 				return elem;
 			}
 		}
-		
-		/*for(Libro elem : todosLosLibros) {
-			if(elem.getIsbn().equals(isbn)) {
-				return elem;
-			}
-		}*/
+	
 		throw new RuntimeException("No se encontro el libro solicitado");
 	}
 	
 	
 	public int reacomodarCategoria(String categoria) { 
-		ArrayList<Libro> cajaDeLibros = quickSortMayorAMenor(obtenerLibrosDeCategoria(categoria));  //Obtengo el Orden de Mayor a Menor. O(n2)
+		//Se obtiene todos los libros de la categoria ingresa
+		//Seguido de eso se ordena el ArrayList de libros de mayor a menor
+		ArrayList<Libro> cajaDeLibros = quickSortMayorAMenor(obtenerLibrosDeCategoria(categoria)); 
 		int estantesLiberados=0;
-		vaciarEstanterias(categoria);  //Vacia las estanterias O(n);
+		vaciarEstanterias(categoria);  //Se le pasa la categoria y vacia todos los estantes con esa categoria
 		
 		for(Estanteria estante : todasLasEstanterias) {
-			for(int i=cajaDeLibros.size()-1; i>=0;i--) {  //lo recorro asi porque al borrar datos puedo alterar la iteracion
+			for(int i=cajaDeLibros.size()-1; i>=0;i--) {
 				//Se compara la categoria del libro con la estanteria y si hay espacio disponible para agregarlo
 				if(cajaDeLibros.get(i).getCategoria().equals(estante.rotulado()) && cajaDeLibros.get(i).getAncho()<=estante.espacioDisponible()) {
-					estante.agregar(cajaDeLibros.get(i));
-					cajaDeLibros.remove(i); //Se agrega y quita el libro de la caja
+					estante.agregar(cajaDeLibros.get(i)); //Se agrega al estante "vacio"
+					cajaDeLibros.remove(i); //Se quita el libro de la caja de libros
 				}
 			}
 		}
 		
-		//Despues de reacomodar todo de menor a mayor se comprueba con este For la cantidad de estantes que quedaron libres.
+		//Despues de reacomodar todo de menor a mayor se comprueba la cantidad de estantes que quedaron libres
 		for(Estanteria estante : todasLasEstanterias) {
 			if(estante.rotulado().equals(categoria) && estante.espacioDisponible()==copiaDeTamanioEstanterias ) {
 				estantesLiberados++;
@@ -129,21 +126,12 @@ public class BDUNGS {
 	private ArrayList<Libro> obtenerLibrosDeCategoria(String categoria){
 		ArrayList<Libro> libros = new ArrayList<Libro>();
 		for(Estanteria elem: this.todasLasEstanterias) { 
-			if(categoria.equals(elem.rotulado())) {//agarra una estanteria, si el rotulado de la estanteria es igual
-				libros.addAll(elem.getLibros());//agrego todos los libros a la nueva lista
-				
+			if(categoria.equals(elem.rotulado())) {//Se comprueba que el rotulado de la estanteria es igual al solicitado
+				libros.addAll(elem.getLibros());//Se agregan todos los libros de esta estanteria al ArrayList de libros
 			}
 		}
 		
-		
-		/*
-		for(Libro elem : todosLosLibros) {
-			if(elem.getCategoria().equals(categoria)) {
-				libros.add(elem);
-			}
-		}*/
-		return libros;//retorno la lista
-		
+		return libros;
 		
 	}
 	
@@ -156,14 +144,8 @@ public class BDUNGS {
 			if(elem.rotulado().equals(categoria)){
 				elem.vaciarEstanteria();
 			}
-
 		}
 
-		/*for(Estanteria elem : todasLasEstanterias) {
-			if(elem.rotulado().equals(categoria)) {
-				elem.vaciarEstanteria();
-			}
-		}*/
 	}
 	
 	private ArrayList<Libro> quickSortMayorAMenor(ArrayList<Libro> libros){
@@ -187,7 +169,7 @@ public class BDUNGS {
 				menor.add(libroNuevo);
 			}
 		}
-		mayor=quickSortMayorAMenor(mayor);  // Estas 2 lineas hacen el llamado recursivo
+		mayor=quickSortMayorAMenor(mayor);  // Se hace el llamado recursido con cada una de las listas
 		menor=quickSortMayorAMenor(menor);  // Para que las ArrayList se vuelvan a ordenar y asi hasta que termine el ordenamiento
 
 		mayor.add(libroDeComparacion);          // Agrego el libro que use de ejemplo a la pila de libros con mayor ancho
@@ -216,6 +198,7 @@ public class BDUNGS {
 	}
 	
 	private boolean existeEstanteriaDe(String categoria) {
+		//Esta funcion solo se usa para saber si existe una estanteria con ese rotulado
 		for(Estanteria elem : todasLasEstanterias) {
 			if(elem.rotulado().equals(categoria)) {
 				return true;
@@ -229,10 +212,11 @@ public class BDUNGS {
 			throw new RuntimeException("El numero de estanteria ingresado no es valido");
 		}
 		int pos=estanteria-1;
-		return todasLasEstanterias.get(pos).espacioDisponible();  //Paso la posicion al array y despues devuelvo el espacio libre de la estanteria
+		return todasLasEstanterias.get(pos).espacioDisponible();  //Se pasa la posicion y se devulve el espacio libre
 	}
 
 	private boolean estaRotulada(int estanteria) {
+		//Esta funcion solo se utiliza para saber si una estanteria ya tiene un rotulado asignado
 		int pos=estanteria-1;
 		
 		if(todasLasEstanterias.get(pos).rotulado().equals("")) {
@@ -243,14 +227,15 @@ public class BDUNGS {
 	}
 
 	private boolean existeElLibro(String isbn) {
-		return  this.conjuntoISBN.pertenece(isbn); //retorna si el isbn pertenece al conjunto
+		return  this.conjuntoISBN.pertenece(isbn); //Retorna si el isbn pertenece al conjunto
 	}
 	
 	private void colocarLibroEnUnaEstanteriaDisponible(Libro libro) { 
 		/*recibe un libro y lo agrega a una estanteria correspondiente, si no se 
-		encuenta una estanteria no hace nada*/
-		for(Estanteria elem: this.todasLasEstanterias) {//se puede hacer en otra funcion
-			if(elem.rotulado().equals(libro.getCategoria()) && elem.espacioDisponible()>=libro.getAncho()) {//si tienen la misma cat y hay espacio disponible
+		encuenta una estanteria tira una excepcion*/
+		for(Estanteria elem: this.todasLasEstanterias) {
+			//si tienen la misma categoria y hay espacio disponible se guarda el libro
+			if(elem.rotulado().equals(libro.getCategoria()) && elem.espacioDisponible()>=libro.getAncho()) {
 				elem.agregar(libro);
 				return;
 			}
@@ -259,29 +244,24 @@ public class BDUNGS {
 		
 		
 	}
-	private void buscarLibroYEliminarlo(Libro libro) {//le pasas un libro y lo elimina 
-		for(Estanteria elem: this.todasLasEstanterias) {//tiene que recorrer todas las estanterias
-			while(elem.pertenece(libro)) {//mientras el libro esta en la estanteria
-				elem.quitar(libro);//lo quito de la estanteria
+	private void buscarLibroYEliminarlo(Libro libro) {//Se pasa un libro y lo elimina 
+		
+		for(Estanteria elem: this.todasLasEstanterias) {//Se recorre todas las estanterias
+			while(elem.pertenece(libro)) {//Mientras el libro pertenezca a la estanteria
+				elem.quitar(libro);//Se van a ir quitando de la estanteria todas las copias de ese libro, con el libro en si.
 			}
-			/*if(elem.pertenece(libro)) {//si el libro aparece en una
-				elem.quitar(libro);//quito el libro de la estanteria
-				
-				//catDeEjemplares.quitar(libro);
-				//todosLosLibros.remove(libro); 
-				//this.cojuntoISBN.eliminar(libro.getIsbn());//lo elimino del conjunto de ISBN
-				
-			}*/
 		}
+		
+		//Se elimina de todas las estructuras de datos
 		this.catDeEjemplares.quitar(libro);
-		this.conjuntoISBN.eliminar(libro.getIsbn());//lo elimino del conjunto de ISBN
+		this.conjuntoISBN.eliminar(libro.getIsbn());
 		this.conjuntoLibros.eliminar(libro);
 	}
 	
 	@Override
-	public String toString() {//hacer piola, ahora solo imprimo solo las estanterias
+	public String toString() {
 		StringBuilder cadena= new StringBuilder("Biblioteca Ungs: "+"\n");
-		Integer cont= 1; //para saber que estanteria
+		Integer cont= 1; //Esto se usa para saber el numero de estanteria
 		
 		for(Estanteria elem: todasLasEstanterias) {
 			cadena.append("*Estanteria nro" + cont.toString() + " : " + elem.toString() +"\n");

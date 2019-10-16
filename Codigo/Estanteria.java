@@ -8,7 +8,7 @@ public class Estanteria {
 	private int tamanio;
 	private int copiaTamanio;
 	private int cantidaddelibros;
-	private ArrayList<Libro> librosEnEstanteria; //guardo los libros
+	private ArrayList<Libro> librosEnEstanteria; //ArrayList para guardar los libros
 	
 	public Estanteria(int tamanio){
 		if(tamanio>0) {
@@ -18,35 +18,35 @@ public class Estanteria {
 		else {
 			throw new RuntimeException("El tama�o de la estanteria tiene que ser >0");	
 		}
-		this.rotulo= "";//cuando se crea una estanteria, no tiene rotulo
-		this.cantidaddelibros=0; //inicializo la cantidad 0
-		this.librosEnEstanteria= new ArrayList<Libro>(); //creo la arraylist de libros
+		this.rotulo= "";//Cuando se crea una estanteria, no tiene rotulo.
+		this.cantidaddelibros=0; //Se inicializa la cantidad a 0
+		this.librosEnEstanteria= new ArrayList<Libro>(); //Se crea la arraylist de libros
 		
 	}
 	
 	
-	void agregar(Libro libro) {
-		if(this.rotulo.equals("")) {//si la estanteria no tiene rotulo
+	public void agregar(Libro libro) {
+		if(this.rotulo.equals("")) {//Si la estanteria no tiene rotulo
 			throw new RuntimeException("La estanteria no esta rotulada");
 		}
-		if(this.rotulo.equals(libro.getCategoria())){ //si el rotulo es igual a la categoria del libro
-			this.librosEnEstanteria.add(libro);//lo agrego
-			this.tamanio= tamanio - libro.getAncho();//le resto tama�o
-			this.cantidaddelibros++;//aumento la cat de libros
+		if(this.rotulo.equals(libro.getCategoria())){ //Se compara que el rotulado sea igual a al categoria del libro
+			this.librosEnEstanteria.add(libro);//Se agrega
+			this.tamanio= tamanio - libro.getAncho();//Se resta el tamanio
+			this.cantidaddelibros++;//Se aumenta la cantidad de libros
 		}
 		
 	}
 	
-	void quitar(Libro libro) {
+	public void quitar(Libro libro) {
 		if(pertenece(libro)) {
-			this.librosEnEstanteria.remove(libro);
-			this.tamanio+= libro.getAncho();
-			this.cantidaddelibros--;
+			this.librosEnEstanteria.remove(libro); //Se remueve el libro ingresado del ArrayList
+			this.tamanio+= libro.getAncho(); //Se le "agrega" espacio a la estanteria
+			this.cantidaddelibros--; //Se resta la cantidad de libros
 		}
 		
 	}
 	
-	boolean estaVacia() {
+	public boolean estaVacia() {
 		if(this.cantidaddelibros>0) {
 			return false;
 		}
@@ -54,8 +54,9 @@ public class Estanteria {
 			return true;
 		}
 	}
-	void rotular(String rotulo) { //va a cambiar el rotulo
-		if(estaVacia()) {//solo si esta vacio se le puede asignar un rotulo
+	
+	public void rotular(String rotulo) {
+		if(estaVacia()) {//Solo si esta vacio se le puede asignar un rotulo
 			this.rotulo= rotulo;
 		}
 		else {
@@ -63,7 +64,7 @@ public class Estanteria {
 		}
 	}
 	
-	boolean pertenece(Libro libro) {
+	public boolean pertenece(Libro libro) {
 		for(Libro elem: librosEnEstanteria) {
 			if(elem.equals(libro)) {
 				return true;
@@ -79,29 +80,18 @@ public class Estanteria {
 		this.librosEnEstanteria=quitarLibros;
 	}
 	
-	//IMPORTANTE 3. Esta funcion debe de ser borrada y sustituida por "vaciarEstanteria".
-	/*public ArrayList<Libro> obtenerLibros(){
-		ArrayList<Libro> asd = new ArrayList<Libro>();
-		ArrayList<Libro> copiaDeLibros = new ArrayList<Libro>();  //Creo una copia de los libros
-		for(Libro elem : librosEnEstanteria) {
-			copiaDeLibros.add(elem);  //Copio todos los libros que esten en la estanteria
-		}
-		this.librosEnEstanteria=asd;  //Borro todos los libros
-		tamanio=copiaTamanio;  //Reseteo el tamano de la estanteria
-		return copiaDeLibros;
-	}*/
 	
-	
-	int espacioDisponible() {
+	public int espacioDisponible() {
 		return this.tamanio;
 	}
-	int cantidadDeLibros() {
+	public int cantidadDeLibros() {
 		return this.cantidaddelibros;
 	}
-	String rotulado() {
+	public String rotulado() {
 		return this.rotulo;
 	}
-	ArrayList<Libro> getLibros(){
+	
+	public ArrayList<Libro> getLibros(){
 		return this.librosEnEstanteria;
 	}
 	

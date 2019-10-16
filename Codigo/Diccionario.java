@@ -6,7 +6,8 @@ import java.util.HashSet;
 public class Diccionario<Clave, Significado> {
 	private ArrayList< Tupla<Clave,Significado> > datos;
 	private HashSet<Clave> claves;
-	public Diccionario () {//constructor
+	
+	public Diccionario () {
 		this.datos= new ArrayList< Tupla <Clave,Significado> >();
 		this.claves = new HashSet<Clave>();
 	}
@@ -18,15 +19,14 @@ public class Diccionario<Clave, Significado> {
 			claves.add(clave); //Agrego la clave al conjunto.
 		}
 		else {
-			for(int i=0; i<datos.size(); i++) { //recorro el array de lista
-				if(clave.equals(datos.get(i).getVar1())) {//si el string de n es igual al de datos[i](variable1). asumo que son iguales
-					datos.get(i).setVar2(significado); //asi que sobre escribo el significado (la variable 2)
+			for(int i=0; i<datos.size(); i++) { //Se recorre el array de lista
+				if(clave.equals(datos.get(i).getVar1())) {//si el string de n es igual al de datos[i](variable1). Se asume que son iguales
+					datos.get(i).setVar2(significado); //Asi que se sobre escribe el significado (la variable 2)
 				}
 			}
 		}
 	}
 	public Significado obtener(Clave n) {
-		//System.out.println(claves.size());
 		for(Tupla<Clave,Significado> elem: datos) {
 			if(elem.getVar1().equals(n)) {
 				return elem.getVar2();
@@ -34,6 +34,7 @@ public class Diccionario<Clave, Significado> {
 		}
 		throw new RuntimeException("No existe Significado asociado con esa Clave");
 	}
+	
 	public Significado obtenerOPredeterminado(Clave n, Significado s) {
 		for(Tupla<Clave,Significado> elem: datos) {
 			if(elem.getVar1().equals(n)) {
@@ -60,10 +61,9 @@ public class Diccionario<Clave, Significado> {
 	public boolean pertenece(Clave n) {
 		boolean ret= false;
 		for(int i=0; i<datos.size();i++) {
-			if(n.equals(datos.get(i).getVar1())) {//si tienen la misma clave
+			if(n.equals(datos.get(i).getVar1())) {
 				ret= ret||true;
-			}
-				
+			}	
 		}
 		return ret;
 	}

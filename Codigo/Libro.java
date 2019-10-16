@@ -8,6 +8,7 @@ public class Libro {
 	
 	
 	Libro(String isbn, String categoria, String nombre, int ancho ){
+		//Se controla que el libro cumpla con todos los requisitos
 		if(ancho>0) {
 			this.ancho= ancho;
 		}
@@ -50,24 +51,6 @@ public class Libro {
 		return this.ancho;
 	}
 	
-	/* Ignora esto xdxd
-	 * boolean equals(Libro libro){//tengo que hacerlo para determinar cuando un libro es igual a otro
-	 
-		boolean ret= false;
-		if(this.isbn.equals(libro.getIsbn())) {//si tienen el mismo isbn
-			ret= ret||true;//va a cambiar a true, sino va seguir en false
-		}
-		if(this.nombre.equals(libro.getNombre())) {//si tienen el mismo nombre
-			ret= ret&&true;//si tiene el mismo isbn y nombre va a cambiar a true, sino va seguir en false
-		}
-		if(this.getCategoria().equals(libro.getCategoria())) {//si tienen la misma cat
-			ret= ret&&true;// y si tenia el mismo nombre, va a valer true. sino arrastra el false
-		}
-		if(this.ancho==libro.getAncho()) {//si tienen el mismo ancho
-			ret= ret&&true;//y tiene mismo name y cat, va a ser true, sino va a ser false
-		}
-		return ret;//retorna su  valoor
-	}*/
 	@Override
 	public String toString() {
 		String cadena= "ISBN: " + this.isbn + ", Categoria: " + this.categoria + ", Nombre: " + this.nombre;
