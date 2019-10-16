@@ -199,12 +199,17 @@ public class BDUNGS {
 	
 	private boolean existeEstanteriaDe(String categoria) {
 		//Esta funcion solo se usa para saber si existe una estanteria con ese rotulado
-		for(Estanteria elem : todasLasEstanterias) {
+		
+		Iterator iterator = todasLasEstanterias.iterator();
+		
+		while(iterator.hasNext()) {
+			Estanteria elem = (Estanteria)iterator.next();
 			if(elem.rotulado().equals(categoria)) {
 				return true;
 			}
 		}
 		return false;
+		
 	}
 	
 	public int espacioLibre(int estanteria) {
@@ -244,12 +249,19 @@ public class BDUNGS {
 		
 		
 	}
-	private void buscarLibroYEliminarlo(Libro libro) {//Se pasa un libro y lo elimina 
+	private void buscarLibroYEliminarlo(Libro libro) {//Se le pasa un libro y lo elimina 
 		
-		for(Estanteria elem: this.todasLasEstanterias) {//Se recorre todas las estanterias
+		
+		Iterator iterator = todasLasEstanterias.iterator();
+		
+		while(iterator.hasNext()) { //Se recorre todas las estanterias
+			
+			Estanteria elem = (Estanteria)iterator.next();
+			
 			while(elem.pertenece(libro)) {//Mientras el libro pertenezca a la estanteria
-				elem.quitar(libro);//Se van a ir quitando de la estanteria todas las copias de ese libro, con el libro en si.
+				elem.quitar(libro); //Se van a ir quitando de la estanteria todas las copias de ese libro, con el libro en si.
 			}
+			
 		}
 		
 		//Se elimina de todas las estructuras de datos
