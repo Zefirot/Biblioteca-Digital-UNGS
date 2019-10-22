@@ -7,9 +7,9 @@ import java.util.Iterator;
 public class BDUNGS {
 	private ArrayList<Estanteria> todasLasEstanterias; //Todas las estanterias 
 	private Conjunto<String> conjuntoISBN;//Sirve para contar rapido los libros y saber si existen dentro de la biblioteca
-	private Diccionario<Libro, Integer> cantDeEjemplares;  //Contiene la cantidad de ejemplares
-	private Conjunto<Libro> conjuntoLibros;
-	
+	private Diccionario<Libro, Integer> catDeEjemplares;  //Contiene la cantidad de ejemplares
+	//private Conjunto<Libro> conjuntoLibros;
+	private int copiaDeTamanioEstanterias;
 	
 	
 	public BDUNGS(int catEstanterias, int tamaniodeEstanterias){
@@ -22,10 +22,10 @@ public class BDUNGS {
 
 		this.conjuntoISBN= new Conjunto<String>();
 
-		this.conjuntoLibros= new Conjunto<Libro>();
-	
+		//this.conjuntoLibros= new Conjunto<Libro>();
+		this.copiaDeTamanioEstanterias=tamaniodeEstanterias;
 		
-		this.cantDeEjemplares = new Diccionario<Libro,Integer>();
+		this.catDeEjemplares = new Diccionario<Libro,Integer>();
 		
 		//Se crean todas las estanterias cuando se llama al constructor
 		for(int i=0; i<catEstanterias;i++) {
@@ -43,9 +43,9 @@ public class BDUNGS {
 			
 			this.conjuntoISBN.insertar(isbn);//Lo se agrega al conjuntoISBN
 			
-			this.cantDeEjemplares.agregar(libroingresado, 1);  //Se agrega el libro nuevo a la cantidad de ejemplares
+			this.catDeEjemplares.agregar(libroingresado, 1);  //Se agrega el libro nuevo a la cantidad de ejemplares
 			
-			this.conjuntoLibros.insertar(libroingresado); //Se agrega el libro nuevo al conjunto
+			//this.conjuntoLibros.insertar(libroingresado); //Se agrega el libro nuevo al conjunto
 
 			
 			colocarLibroEnUnaEstanteriaDisponible(libroingresado);
@@ -54,7 +54,7 @@ public class BDUNGS {
 			Libro libroingresado = obtenerLibro(isbn);
 			
 			//Si el libro existe entonces lo "agrego de nuevo" y despues cambio el significado. El cual seria la cantidad de apariciones.
-			cantDeEjemplares.agregar(libroingresado, cantDeEjemplares.obtener(libroingresado)+1);
+			catDeEjemplares.agregar(libroingresado, catDeEjemplares.obtener(libroingresado)+1);
 
 			colocarLibroEnUnaEstanteriaDisponible(libroingresado); 
 		}
@@ -85,12 +85,16 @@ public class BDUNGS {
 	
 	private Libro obtenerLibro(String isbn) {
 		//Se recorre todas las Estanterias y se busca el libro
-		for(Libro elem : this.conjuntoLibros.getConjunto()) {
+		/*for(Libro elem : this.conjuntoLibros.getConjunto()) {
+			if(elem.getIsbn().equals(isbn)) {
+				return elem;
+			}
+		}*/
+		for(Libro elem: this.catDeEjemplares.keySet()) {
 			if(elem.getIsbn().equals(isbn)) {
 				return elem;
 			}
 		}
-	
 		throw new RuntimeException("No se encontro el libro solicitado");
 	}
 	
@@ -114,8 +118,7 @@ public class BDUNGS {
 		
 		//Despues de reacomodar todo de menor a mayor se comprueba la cantidad de estantes que quedaron libres
 		for(Estanteria estante : todasLasEstanterias) {
-			
-			if(estante.rotulado().equals(categoria) && estante.estaVacia() ) {
+			if(estante.rotulado().equals(categoria) && estante.espacioDisponible()==copiaDeTamanioEstanterias ) {
 				estantesLiberados++;
 			}
 		}
@@ -189,9 +192,9 @@ public class BDUNGS {
 		}
 		
 		HashMap<String,Integer> diccDeCategoria = new HashMap<String,Integer>(); //Se crea un nuevo HashMap para que el JUni lo acepte.
-		for(Libro elem : cantDeEjemplares.keySet()) {
+		for(Libro elem : catDeEjemplares.keySet()) {
 			if(elem.getCategoria().equals(categoria)) {
-				diccDeCategoria.put(elem.getIsbn(), cantDeEjemplares.obtener(elem));  //Registro el nombre y la cantidad de veces que aparecen
+				diccDeCategoria.put(elem.getIsbn(), catDeEjemplares.obtener(elem));  //Registro el nombre y la cantidad de veces que aparecen
 			}
 		}
 		return diccDeCategoria;
@@ -266,9 +269,9 @@ public class BDUNGS {
 		}
 		
 		//Se elimina de todas las estructuras de datos
-		this.cantDeEjemplares.quitar(libro);
+		this.catDeEjemplares.quitar(libro);
 		this.conjuntoISBN.eliminar(libro.getIsbn());
-		this.conjuntoLibros.eliminar(libro);
+		//this.conjuntoLibros.eliminar(libro);
 	}
 	
 	@Override
