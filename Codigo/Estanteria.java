@@ -77,7 +77,9 @@ public class Estanteria {
 	public void vaciarEstanteria() {  //Se resetea la estanteria.
 		ArrayList<Libro> quitarLibros = new ArrayList<Libro>();
 		this.tamanio=copiaTamanio;
+		this.cantidaddelibros=0;
 		this.librosEnEstanteria=quitarLibros;
+		
 	}
 	
 	

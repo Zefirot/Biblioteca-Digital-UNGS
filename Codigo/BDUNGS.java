@@ -8,8 +8,8 @@ public class BDUNGS {
 	private ArrayList<Estanteria> todasLasEstanterias; //Todas las estanterias 
 	private Conjunto<String> conjuntoISBN;//Sirve para contar rapido los libros y saber si existen dentro de la biblioteca
 	private Diccionario<Libro, Integer> catDeEjemplares;  //Contiene la cantidad de ejemplares
-	private Conjunto<Libro> conjuntoLibros;
-	private int copiaDeTamanioEstanterias;
+	//private Conjunto<Libro> conjuntoLibros;
+	//private int copiaDeTamanioEstanterias;
 	
 	
 	public BDUNGS(int catEstanterias, int tamaniodeEstanterias){
@@ -22,8 +22,8 @@ public class BDUNGS {
 
 		this.conjuntoISBN= new Conjunto<String>();
 
-		this.conjuntoLibros= new Conjunto<Libro>();
-		this.copiaDeTamanioEstanterias=tamaniodeEstanterias;
+		//this.conjuntoLibros= new Conjunto<Libro>();
+		//
 		
 		this.catDeEjemplares = new Diccionario<Libro,Integer>();
 		
@@ -45,7 +45,7 @@ public class BDUNGS {
 			
 			this.catDeEjemplares.agregar(libroingresado, 1);  //Se agrega el libro nuevo a la cantidad de ejemplares
 			
-			this.conjuntoLibros.insertar(libroingresado); //Se agrega el libro nuevo al conjunto
+			//this.conjuntoLibros.insertar(libroingresado); //Se agrega el libro nuevo al conjunto
 
 			
 			colocarLibroEnUnaEstanteriaDisponible(libroingresado);
@@ -85,12 +85,16 @@ public class BDUNGS {
 	
 	private Libro obtenerLibro(String isbn) {
 		//Se recorre todas las Estanterias y se busca el libro
-		for(Libro elem : this.conjuntoLibros.getConjunto()) {
+		/*for(Libro elem : this.conjuntoLibros.getConjunto()) {
+			if(elem.getIsbn().equals(isbn)) {
+				return elem;
+			}
+		}*/
+		for(Libro elem: this.catDeEjemplares.keySet()) {
 			if(elem.getIsbn().equals(isbn)) {
 				return elem;
 			}
 		}
-	
 		throw new RuntimeException("No se encontro el libro solicitado");
 	}
 	
@@ -114,7 +118,7 @@ public class BDUNGS {
 		
 		//Despues de reacomodar todo de menor a mayor se comprueba la cantidad de estantes que quedaron libres
 		for(Estanteria estante : todasLasEstanterias) {
-			if(estante.rotulado().equals(categoria) && estante.espacioDisponible()==copiaDeTamanioEstanterias ) {
+			if(estante.rotulado().equals(categoria) && estante.estaVacia()) {
 				estantesLiberados++;
 			}
 		}
@@ -267,7 +271,7 @@ public class BDUNGS {
 		//Se elimina de todas las estructuras de datos
 		this.catDeEjemplares.quitar(libro);
 		this.conjuntoISBN.eliminar(libro.getIsbn());
-		this.conjuntoLibros.eliminar(libro);
+		//this.conjuntoLibros.eliminar(libro);
 	}
 	
 	@Override
